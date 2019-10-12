@@ -1,4 +1,4 @@
-package com.example.speed_cube_timer
+package com.ionelaipatioaei.speed_cube_timer
 
 import android.os.Bundle
 
