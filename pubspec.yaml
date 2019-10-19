@@ -29,6 +29,9 @@ dependencies:
   flutter_svg: ^0.14.2
   hive: ^1.0.0
   hive_flutter: ^0.2.1
+  path_provider: ^1.3.0
+  fl_chart: ^0.3.4
+  custom_switch: ^0.0.1
 
 dev_dependencies:
   flutter_test:
@@ -54,7 +57,7 @@ flutter:
    # gradients
    - assets/gradients/linear/linear_gradients.json
    - assets/gradients/mesh/
-   - assets/gradients/mesh/thumbnails
+  #  - assets/gradients/mesh_thumbnails
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -77,6 +80,8 @@ flutter:
           style: italic
         - asset: assets/fonts/OpenSans/OpenSans-Light.ttf
           weight: 300
+        - asset: assets/fonts/OpenSans/OpenSans-Bold.ttf
+          weight: 700
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

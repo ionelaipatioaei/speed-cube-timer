@@ -3,6 +3,7 @@ import 'package:speed_cube_timer/shared/custom_text.dart';
 
 import 'package:speed_cube_timer/components/svg_icon_button.dart';
 import 'package:speed_cube_timer/shared/svg_icon.dart';
+import 'package:speed_cube_timer/utils/sizes.dart';
 
 class TopNavbar extends StatelessWidget {
   final String _title;
@@ -12,20 +13,21 @@ class TopNavbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double navbarHeight = 54;
     const double iconHeight = 40;
-    print(MediaQuery.of(context).padding.top);
     return Container(
       // height: navbarHeight,
       // padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
       child: Container(
         constraints: BoxConstraints.expand(
-          height: navbarHeight + MediaQuery.of(context).padding.top,
+          height: NAVBAR_HEIGHT + MediaQuery.of(context).padding.top,
           width: MediaQuery.of(context).size.width
         ),
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.12)
+          color: Colors.black.withOpacity(0.12),
+          border: Border(
+            bottom: BorderSide(width: 1, color: Colors.white)
+          )
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,

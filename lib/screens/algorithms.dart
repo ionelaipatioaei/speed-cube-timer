@@ -8,8 +8,6 @@ class Algorithms extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Background(
-        [Colors.transparent, Colors.transparent],
-        1,
         child: Column(
           children: <Widget>[
             TopNavbar("Algorithms", "assets/icons/algorithm.svg", "steps like icon")
