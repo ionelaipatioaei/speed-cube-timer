@@ -33,7 +33,7 @@ class InputWithSubmit extends StatelessWidget {
             alignment: Alignment.center,
             child: CustomInput(),
           ),
-          SvgIconButton("assets/icons/check.svg", "check icon", () => null)
+          SvgIconButton("assets/icons/check.svg", "check icon", () => null, animate: true)
         ],
       ),
     );

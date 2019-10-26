@@ -3,19 +3,17 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:speed_cube_timer/shared/custom_text.dart';
 
-class TextButton extends StatefulWidget {
+class SmallTextButton extends StatefulWidget {
   final String text;
-  final String text2;
-  final double width;
-
   final Function action;
-  TextButton(this.text, this.text2, this.action, {this.width});
+
+  SmallTextButton(this.text, this.action);
 
   @override
-  State<StatefulWidget> createState() => _TextButtonState();
+  State<StatefulWidget> createState() => _SmallTextButtonState();
 }
 
-class _TextButtonState extends State<TextButton> {
+class _SmallTextButtonState extends State<SmallTextButton> {
   double opacity = 0.12;
 
   void animatePress() {
@@ -26,14 +24,6 @@ class _TextButtonState extends State<TextButton> {
 
   @override
   Widget build(BuildContext context) {
-    Widget child = widget.text2.isEmpty ? CustomText(widget.text, size: 16) : Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        CustomText(widget.text),
-        CustomText(widget.text2)
-      ],
-    );
     return GestureDetector(
       onTap: animatePress,
       child: AnimatedContainer(
@@ -41,15 +31,16 @@ class _TextButtonState extends State<TextButton> {
         curve: Curves.easeInOut,
         constraints: BoxConstraints.expand(
           height: 40.0,
-          width: widget.width
+          // width: widget.width
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
           color: Colors.black.withOpacity(opacity)
         ),
+        padding: EdgeInsets.symmetric(horizontal: 4.0),
+        margin: EdgeInsets.all(4.0),
         alignment: Alignment.center,
-        margin: EdgeInsets.symmetric(vertical: 4.0),
-        child: child
+        child: CustomText(widget.text, align: TextAlign.center, size: 12),
       )
     );
   }

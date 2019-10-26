@@ -25,7 +25,7 @@ class _CustomInputState extends State<CustomInput> {
     return TextField(
       decoration: InputDecoration(
         hintText: "Add new item",
-        hintStyle: TextStyle(fontFamily: "OpenSans", color: Colors.white.withOpacity(0.6)),
+        hintStyle: TextStyle(fontFamily: "OpenSans", color: Colors.white.withOpacity(0.8)),
         focusColor: Colors.white,
         border: InputBorder.none,
         contentPadding: EdgeInsets.all(0),

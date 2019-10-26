@@ -33,7 +33,7 @@ class TopNavbar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            SvgIconButton("assets/icons/chevron-left.svg", "chevron left icon", () => Navigator.pop(context), iconHeight: iconHeight),
+            SvgIconButton("assets/icons/chevron-left.svg", "chevron left icon", () => Navigator.pop(context), iconHeight: iconHeight, animate: false),
             Container(
               constraints: BoxConstraints.expand(
                 width: MediaQuery.of(context).size.width - (iconHeight * 2) - (28 + 8)

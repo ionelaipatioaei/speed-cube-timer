@@ -32,10 +32,10 @@ class TopNavbarMenu extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             // SvgIcon("assets/icons/chevron-left.svg", "back", 40),
-            SvgIconButton("assets/icons/pie-chart.svg", "pie-char icon", () => Navigator.push(context, CupertinoPageRoute(builder: (context) => Stats())), text: "Statistics"),
-            SvgIconButton("assets/icons/algorithm.svg", "step like icon", () => Navigator.push(context, CupertinoPageRoute(builder: (context) => Algorithms())), text: "Algorithms"),
-            SvgIconButton("assets/icons/sliders.svg", "slider icon", () => Navigator.push(context, CupertinoPageRoute(builder: (context) => Customize())), text: "Customize"),
-            SvgIconButton("assets/icons/settings.svg", "settings icon", () => Navigator.push(context, CupertinoPageRoute(builder: (context) => Settings())), text: "Settings")
+            SvgIconButton("assets/icons/pie-chart.svg", "pie-char icon", () => Navigator.push(context, CupertinoPageRoute(builder: (context) => Stats())), text: "Statistics", animate: false),
+            SvgIconButton("assets/icons/algorithm.svg", "step like icon", () => Navigator.push(context, CupertinoPageRoute(builder: (context) => Algorithms())), text: "Algorithms", animate: false),
+            SvgIconButton("assets/icons/sliders.svg", "slider icon", () => Navigator.push(context, CupertinoPageRoute(builder: (context) => Customize())), text: "Customize", animate: false),
+            SvgIconButton("assets/icons/settings.svg", "settings icon", () => Navigator.push(context, CupertinoPageRoute(builder: (context) => Settings())), text: "Settings", animate: false)
           ],
         ),
       )

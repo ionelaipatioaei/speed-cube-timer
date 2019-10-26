@@ -10,23 +10,23 @@ class SvgIconButton extends StatefulWidget {
   final Function _action;
   final double iconHeight;
   final String text;
-  SvgIconButton(this._src, this._alt, this._action, {this.iconHeight, this.text});
+  final bool animate;
+  final EdgeInsets margin;
+  SvgIconButton(this._src, this._alt, this._action, {this.iconHeight, this.text, this.animate, this.margin});
 
   @override
   State<StatefulWidget> createState() => _SvgIconButtonState();
 }
 
 class _SvgIconButtonState extends State<SvgIconButton> {
-  bool pressed = false;
-
-  void resetOpacity() {
-    setState(() => pressed = false);
-  }
+   double opacity = 0.0;
 
   void animatePress() {
-    setState(() => pressed = true);
+    if (widget.animate) {
+      setState(() => opacity = 0.26);
+      Timer(Duration(milliseconds: 200), () => setState(() => opacity = 0.0));
+    }
     widget._action();
-    Timer(Duration(milliseconds: 400), resetOpacity);
   }
 
   @override
@@ -46,12 +46,16 @@ class _SvgIconButtonState extends State<SvgIconButton> {
     }
     return GestureDetector(
       onTap: animatePress,
-      child: AnimatedOpacity(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.decelerate,
-        opacity: pressed ? 0.1 : 1.0,
+      child: widget.animate ? AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(opacity),
+          borderRadius: BorderRadius.all(Radius.circular(40.0))
+        ),
+        margin: widget.margin,
         child: child
-      )
+      ) : child
     );
   }
 }

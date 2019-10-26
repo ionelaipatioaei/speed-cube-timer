@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:speed_cube_timer/components/navigation/top_navbar.dart';
 import 'package:speed_cube_timer/components/settings/setting_practice.dart';
+import 'package:speed_cube_timer/shared/custom_list_view.dart';
 import 'package:speed_cube_timer/shared/custom_slider.dart';
 import 'package:speed_cube_timer/components/settings/text_switch.dart';
 import 'package:speed_cube_timer/components/text_button.dart';
 import 'package:speed_cube_timer/screens/privacy_policy.dart';
 import 'package:speed_cube_timer/screens/select_practice.dart';
-import 'package:speed_cube_timer/shared/adjusted_container.dart';
 import 'package:speed_cube_timer/shared/background.dart';
 import 'package:speed_cube_timer/components/settings/setting_spacer.dart';
 
@@ -19,14 +19,12 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   bool liveStopwatch;
   bool inspectionTime;
-  bool inspectionTimeAutostart;
   bool scramblingSequence;
 
   @override
   void initState() {
     liveStopwatch = true;
     inspectionTime = true;
-    inspectionTimeAutostart = true;
     scramblingSequence = true;
     super.initState();
   }
@@ -41,8 +39,9 @@ class _SettingsState extends State<Settings> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             TopNavbar("Settings", "assets/icons/settings.svg", "settings icon"),
-            AdjustedContainer(
-              child: Column(
+            CustomListView(
+              child: ListView(
+                padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: MediaQuery.of(context).size.width * 0.05),
                 children: <Widget>[
                   SettingPractice("Practicing", "3x3x3", width, () => Navigator.push(context, CupertinoPageRoute(builder: (context) => SelectPractice()))),
                   SettingSpacer(width),
@@ -54,9 +53,6 @@ class _SettingsState extends State<Settings> {
 
                   TextSwitch(text: "Inspection Time", value: inspectionTime, width: width, disabled: false, onChange: (bool value) {
                     setState(() => inspectionTime = !inspectionTime);
-                  }),
-                  TextSwitch(text: "Autostart", value: inspectionTimeAutostart, width: width, disabled: !inspectionTime, onChange: (bool value) {
-                    setState(() => inspectionTimeAutostart = !inspectionTimeAutostart);
                   }),
                   CustomSlider(value: 15, minValue: 0, maxValue: 60, width: width, disabled: !inspectionTime, onChange: (int value) {
                     print(value.toString());

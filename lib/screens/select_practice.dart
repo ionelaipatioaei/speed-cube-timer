@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:speed_cube_timer/components/navigation/top_navbar.dart';
 import 'package:speed_cube_timer/components/settings/input_with_submit.dart';
+import 'package:speed_cube_timer/components/svg_icon_button.dart';
 import 'package:speed_cube_timer/shared/adjusted_container.dart';
 import 'package:speed_cube_timer/shared/background.dart';
+import 'package:speed_cube_timer/shared/custom_list_view.dart';
 import 'package:speed_cube_timer/shared/custom_text.dart';
 import 'package:speed_cube_timer/components/settings/text_switch.dart';
 
@@ -32,7 +35,9 @@ class _SelectPracticeState extends State<SelectPractice>{
     // practicingOptions.add(InputWithSubmit(width: width));
     for (int i = 0; i < selected.length; i++) {
       practicingOptions.add(
-        TextSwitch(text: names[i], value: selected[i], width: width, disabled: false, useValueToUpdate: true, onChange: (bool value) {
+        TextSwitch(text: names[i], value: selected[i], width: width, disabled: false, useValueToUpdate: true, 
+        button: SvgIconButton("assets/icons/x.svg", "close icon", () => null, animate: true, margin: EdgeInsets.only(left: 8.0)), 
+        onChange: (bool value) {
           for (int j = 0; j < selected.length; j++) {
             if (i == j) {
               setState(() => selected[i] = !value);
@@ -52,17 +57,13 @@ class _SelectPracticeState extends State<SelectPractice>{
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             TopNavbar("Practicing", "assets/icons/crosshair.svg", "crosshair icon"),
-            AdjustedContainer(
-              child: Column(
-                children: <Widget>[
-                  InputWithSubmit(width: width),
-                  Expanded(child: ListView(
-                    // shrinkWrap: true,
-                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: MediaQuery.of(context).size.width * 0.05),
-                    children: practicingOptions
-                  ))
-                ],
-              )
+            CustomListView(
+              fixedWidget: InputWithSubmit(width: width),
+              child: ListView(
+                // shrinkWrap: true,
+                padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: MediaQuery.of(context).size.width * 0.05 + 8),
+                children: practicingOptions
+              ),
             )
           ],
         )

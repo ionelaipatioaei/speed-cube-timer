@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 
 class AdjustedContainer extends StatelessWidget {
   final Widget child;
+  final EdgeInsets padding;
 
-  AdjustedContainer({this.child});
+  AdjustedContainer({this.child, this.padding});
 
   @override
   Widget build(BuildContext context) {
-    const double bottomBannerAdHeight = 60;
+    const double bottomBannerAdHeight = 0;
     return Expanded(
       child: Container(
         constraints: BoxConstraints.expand(
@@ -17,6 +18,7 @@ class AdjustedContainer extends StatelessWidget {
         // decoration: BoxDecoration(
         //   color: Colors.blue
         // ),
+        padding: padding,
         margin: EdgeInsets.only(bottom: bottomBannerAdHeight),
         child: child
       )

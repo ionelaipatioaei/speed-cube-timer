@@ -25,7 +25,19 @@ class SettingPractice extends StatelessWidget {
           CustomText(text, size: 18),
           GestureDetector(
             onTap: action,
-            child: CustomText(value, size: 18, color: Colors.white.withOpacity(0.6)),
+            child: Container(
+              // constraints: BoxConstraints.expand(
+              //   height: 20,
+              //   width: width * 0.5
+              // ),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.12),
+                borderRadius: BorderRadius.all(Radius.circular(20.0))
+              ),
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+              child: CustomText(value, size: 18, color: Colors.white70),
+            )
           )
         ],
       )
