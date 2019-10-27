@@ -15,9 +15,6 @@ class AdjustedContainer extends StatelessWidget {
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width
         ),
-        // decoration: BoxDecoration(
-        //   color: Colors.blue
-        // ),
         padding: padding,
         margin: EdgeInsets.only(bottom: bottomBannerAdHeight + MediaQuery.of(context).padding.bottom),
         child: child

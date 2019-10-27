@@ -82,7 +82,7 @@ class _HomeState extends State<Home> {
       setState(() {
         totalMs = stopwatch.elapsedMilliseconds;
       });
-      // record the timing from the solve
+      // record the solve stats
 
 
       resetCycle();

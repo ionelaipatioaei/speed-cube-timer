@@ -26,7 +26,7 @@ class CustomModal {
             width: MediaQuery.of(context).size.width,
             alignment: Alignment.center,
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+              filter: ImageFilter.blur(sigmaX: 6.0, sigmaY: 6.0),
               child: child
             ),
           ),

@@ -80,6 +80,7 @@ class RecordActivity extends StatelessWidget {
                     // resetCycle is called because some time onTapDown from home.dart is called and the home
                     // screen changes to the inspection/ready color, this prevents that
                     action0: () {
+                      print(Hive.isBoxOpen("setting"));
                       resetCycle();
                     },
                     action1: () {
@@ -92,7 +93,6 @@ class RecordActivity extends StatelessWidget {
                   )
                 ],
               ),
-              // !TODO: reset the things when clicking on the buttons
               BottomStats(displayWidgets, hideAnimationDuration)
             ],
           );
