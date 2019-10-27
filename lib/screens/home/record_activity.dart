@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:speed_cube_timer/components/containers/action_buttons.dart';
+import 'package:speed_cube_timer/components/containers/bottom_stats.dart';
 import 'package:speed_cube_timer/components/custom/custom_text.dart';
 import 'package:speed_cube_timer/shared/adjusted_container.dart';
 import 'package:speed_cube_timer/utils/format_time.dart';
@@ -71,11 +73,11 @@ class RecordActivity extends StatelessWidget {
                     child: CustomText(scramble, align: TextAlign.center, size: 16),
                   ) : SizedBox(height: 0),
                   SizedBox(height: 8.0),
-                  // ActionButtons(displayWidgets, hideAnimationDuration)
+                  ActionButtons(displayWidgets, hideAnimationDuration)
                 ],
               ),
               // !TODO: reset the things when clicking on the buttons
-              // BottomStats(displayWidgets, hideAnimationDuration)
+              BottomStats(displayWidgets, hideAnimationDuration)
             ],
           );
         }

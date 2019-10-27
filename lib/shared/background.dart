@@ -85,7 +85,7 @@ class _BackgroundState extends State<Background> {
       box: Hive.box("customize"),
       watchKeys: ["mesh_gradient", "linear_gradient", "inspection_color", "ready_color"],
       builder: (BuildContext context, Box box) {
-        int meshGradient = box.get("mesh_gradient", defaultValue: 0);
+        int meshGradient = box.get("mesh_gradient", defaultValue: 2);
         int linearGradient = box.get("linear_gradient", defaultValue: 0);
         int inspectionColor = box.get("inspection_color", defaultValue: 0);
         int readyColor = box.get("ready_color", defaultValue: 0);
