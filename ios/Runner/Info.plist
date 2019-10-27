@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<string>com.ionelaipatioaei.speedcubetimer</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -40,6 +40,11 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-1265802006709954~7790511873</string>
+	<key>FIREBASE_ANALYTICS_COLLECTION_ENABLED</key>
 	<false/>
 </dict>
 </plist>
