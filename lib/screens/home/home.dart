@@ -13,7 +13,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   static const int updateTimeMs = 16;
-  static const Duration hideAnimationDuration = Duration(milliseconds: 200);
 
   Stopwatch stopwatch = Stopwatch();
   Timer timer;
@@ -178,8 +177,8 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     liveStopwatch = settings.get("live_stopwatch", defaultValue: true);
-    // allowInspectionTime = settings.get("allow_inspection_time", defaultValue: false);
-    allowInspectionTime = true;
+    allowInspectionTime = settings.get("allow_inspection_time", defaultValue: false);
+    // allowInspectionTime = true;
     inspectionTime = settings.get("inspection_time", defaultValue: 15000);
     showScramblingSequence = settings.get("show_scrambling_sequence", defaultValue: true);
     scramblingSequenceLength = settings.get("scrambling_sequence_length", defaultValue: 16);
@@ -222,7 +221,11 @@ class _HomeState extends State<Home> {
         child: Column(
           children: <Widget>[
             TopMenu(),
-            RecordActivity()
+            RecordActivity(
+              totalMs: totalMs, showStatus: showStatus, status: status,
+              displayWidgets: (runningTimer || runningInspectionTimer),
+              liveStopwatch: liveStopwatch, runningTimer: runningTimer, scramble: scramble, 
+            )
           ],
         )
       )
