@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:speed_cube_timer/components/home/action_buttons.dart';
 import 'package:speed_cube_timer/components/home/bottom_stats.dart';
 
@@ -21,8 +23,12 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   static const int updateTimeMs = 16;
   static const Duration hideAnimationDuration = Duration(milliseconds: 200);
+
   Stopwatch stopwatch = Stopwatch();
   Timer timer;
+
+  Box settings = Hive.box("settings");
+  Box stats = Hive.box("stats");
 
   bool showStatus = true;
   String status = "Long press to get ready!";
@@ -30,10 +36,13 @@ class _HomeState extends State<Home> {
   int totalMs = 0;
 
   // this values need to come from hive
-  bool allowInspectionTime = true;
+  bool liveStopwatch;
+  bool allowInspectionTime;
+  bool showScramblingSequence;
 
   // this value can by update by hive but also used as state
-  int inspectionTime = 3000;
+  int inspectionTime;
+  int scramblingSequenceLength;
 
   // the reason why there are so many variables is to hopefully eliminate all edge cases
   bool gettingReadyForInspection = false;
@@ -51,6 +60,24 @@ class _HomeState extends State<Home> {
   // if onLongPressStart gets fired onTaUp can't be triggered and onLongPressEnd is always
   // called when the users lifts the finger
 
+  String genSramblingSequence(int length) {
+    Random rng = Random();
+    const List<String> moves = ["F", "R", "U", "L", "B", "D", "F'", "R'", "U'", "L'", "B'", "D'", "F2", "R2", "U2", "L2", "B2", "D2"];
+    int totalMoves = moves.length;
+    String genScramble = "";
+    for (int i = 0; i < length; i++) {
+      genScramble += moves[rng.nextInt(totalMoves)];
+      if (i != length - 1) {
+        genScramble += " ";
+      }
+    }
+    return genScramble;
+  }
+
+  void updateBottomStats() {
+
+  }
+
   void resetCycle() {
     setState(() {
       showStatus = true;
@@ -66,8 +93,19 @@ class _HomeState extends State<Home> {
   }
 
   void onTapDown() {
+    // check the settings every time to see if the user updated them
+    setState(() {
+      liveStopwatch = settings.get("live_stopwatch", defaultValue: true);
+      allowInspectionTime = settings.get("allow_inspection_time", defaultValue: false);
+      inspectionTime = settings.get("inspection_time", defaultValue: 15000);
+      showScramblingSequence = settings.get("show_scrambling_sequence", defaultValue: true);
+      scramblingSequenceLength = settings.get("scrambling_sequence_length", defaultValue: 16);
+    });
+
     if (allowInspectionTime && !finishedInspection && !(runningInspectionTimer && runningTimer)) {
-      setState(() => gettingReadyForInspection = true);
+      setState(() {
+        gettingReadyForInspection = true;
+      });
     }
 
     if (runningInspectionTimer) {
@@ -88,6 +126,9 @@ class _HomeState extends State<Home> {
       setState(() {
         totalMs = stopwatch.elapsedMilliseconds;
       });
+      // record the timing from the solve
+
+
       resetCycle();
       stopwatch.reset();
     }
@@ -96,6 +137,8 @@ class _HomeState extends State<Home> {
   }
 
   void onTapUp() {
+    setState(() => scramble = genSramblingSequence(scramblingSequenceLength));
+
     if (allowInspectionTime && !finishedInspection && !(runningInspectionTimer && runningTimer)) {
       setState(() => gettingReadyForInspection = false);
     }
@@ -158,11 +201,18 @@ class _HomeState extends State<Home> {
         showStatus = true;
         status = "Long press to get ready!";
       }
-     });
+    });
   }
 
   @override
   void initState() {
+    liveStopwatch = settings.get("live_stopwatch", defaultValue: true);
+    allowInspectionTime = settings.get("allow_inspection_time", defaultValue: false);
+    inspectionTime = settings.get("inspection_time", defaultValue: 15000);
+    showScramblingSequence = settings.get("show_scrambling_sequence", defaultValue: true);
+    scramblingSequenceLength = settings.get("scrambling_sequence_length", defaultValue: 16);
+    scramble = genSramblingSequence(scramblingSequenceLength);
+
     if (allowInspectionTime) {
       status = "Long press to get ready for inspection!";
     }
@@ -218,40 +268,49 @@ class _HomeState extends State<Home> {
             TopNavbarMenu(),
             AdjustedContainer(
               padding: EdgeInsets.symmetric(horizontal: padding),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(child: CustomText("Currently practicing for 3x3x3", size: 18, align: TextAlign.center, weight: FontWeight.w300,), margin: EdgeInsets.only(top: 16.0)),
-                  Column(
+
+              child: WatchBoxBuilder(
+                box: Hive.box("settings"),
+                watchKeys: ["show_scrambling_sequence", "options", "selected_option"],
+                builder: (BuildContext context, Box box) {
+                  List<String> options = box.get("options", defaultValue: ["2x2x2", "3x3x3", "4x4x4", "5x5x5", "6x6x6", "7x7x7"]);
+                  int selectedOption = box.get("selected_option", defaultValue: 0);
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      AnimatedOpacity(
-                        duration: hideAnimationDuration,
-                        opacity: showStatus ? 1.0 : 0.0,
-                        child: CustomText(status, align: TextAlign.center, color: Colors.white60),
+                      Container(
+                        child: CustomText("Currently practicing for ${options[selectedOption]}", size: 18, align: TextAlign.center, weight: FontWeight.w300,),
+                        margin: EdgeInsets.only(top: 16.0)
                       ),
-                      AnimatedContainer(
-                        duration: hideAnimationDuration,
-                        // constraints: BoxConstraints.expand(
-                        //   height: displayWidgets ? 48.0 : 8.0,
-                        //   width: 1.0
-                        // ),
-                        margin: EdgeInsets.only(bottom: displayWidgets ? 48.0 : 12.0)
+                      Column(
+                        children: <Widget>[
+                          AnimatedOpacity(
+                            duration: hideAnimationDuration,
+                            opacity: showStatus ? 1.0 : 0.0,
+                            child: CustomText(status, align: TextAlign.center, color: Colors.white60),
+                          ),
+                          AnimatedContainer(
+                            duration: hideAnimationDuration,
+                            margin: EdgeInsets.only(bottom: displayWidgets ? 48.0 : 12.0)
+                          ),
+                          CustomText(!displayWidgets || liveStopwatch || !runningTimer ? 
+                            "${mins > 9 ? mins : mins.toString().padLeft(2, '0')}:${secs > 9 ? secs : secs.toString().padLeft(2, '0')}:${ms.toString().length < 3 ? ms.toString().padRight(3, '0') : ms}" : "", 
+                            align: TextAlign.center, size: 42),
+                          box.get("show_scrambling_sequence", defaultValue: true) ? AnimatedOpacity(
+                            duration: hideAnimationDuration,
+                            opacity: displayWidgets ? 0.0 : 1.0,
+                            child: CustomText(scramble, align: TextAlign.center, size: 16),
+                          ) : SizedBox(height: 0),
+                          SizedBox(height: 8.0),
+                          ActionButtons(displayWidgets, hideAnimationDuration)
+                        ],
                       ),
-                      CustomText(!displayWidgets || true ? 
-                        "${mins > 9 ? mins : mins.toString().padLeft(2, '0')}:${secs > 9 ? secs : secs.toString().padLeft(2, '0')}:${ms.toString().length < 3 ? ms.toString().padRight(3, '0') : ms}" : "", 
-                        align: TextAlign.center, size: 42),
-                      true ? AnimatedOpacity(
-                        duration: hideAnimationDuration,
-                        opacity: displayWidgets ? 0.0 : 1.0,
-                        child: CustomText(scramble, align: TextAlign.center, size: 16),
-                      ) : SizedBox(height: 0),
-                      SizedBox(height: 8.0),
-                      ActionButtons(displayWidgets, hideAnimationDuration)
+                      // !TODO: reset the things when clicking on the buttons
+                      BottomStats(displayWidgets, hideAnimationDuration)
                     ],
-                  ),
-                  // !TODO: reset the things when clicking on the buttons
-                  BottomStats(displayWidgets, hideAnimationDuration)
-                ],
+                  );
+
+                }
               )
             )
           ],

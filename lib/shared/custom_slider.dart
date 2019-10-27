@@ -9,10 +9,11 @@ class CustomSlider extends StatefulWidget {
   final int minValue;
   final int maxValue;
   final bool disabled;
+  final double offset;
 
   final Function onChange;
 
-  CustomSlider({this.value, this.width, this.minValue, this.maxValue, this.disabled, this.onChange});
+  CustomSlider({this.value, this.width, this.minValue, this.maxValue, this.disabled, this.offset, this.onChange});
 
   @override
   State<StatefulWidget> createState() => _CustomSliderState();
@@ -29,8 +30,10 @@ class _CustomSliderState extends State<CustomSlider> {
 
   void _onHorizontalDragUpdate(DragUpdateDetails details) {
     if (!widget.disabled) {
+      // print("local: ${details.localPosition.dx} | global: ${details.globalPosition.dx}");
       setState(() => sliderAnimationDuration = 0);
-      double dx = details.localPosition.dx;
+      double dx = details.globalPosition.dx - widget.offset;
+      // double dx = details.localPosition.dx;
       if (dx < (widget.width - (KNOB_SIZE / 2)) && dx > KNOB_SIZE / 2) {
         setState(() => knobX = dx);
       } else if (dx < 0.0) {
@@ -41,20 +44,22 @@ class _CustomSliderState extends State<CustomSlider> {
       int val = ((knobX - KNOB_SIZE / 2) / step).round();
       if (val != calculatedValue) {
         setState(() => calculatedValue = val);
-        widget.onChange(val);
+        // widget.onChange(val);
         // print("calculated value: $calculatedValue | $val");
       }
     }
   }
 
+  // I can also update the value only after the users lifts the finger from the slider
   void _onHorizontalDragEnd(DragEndDetails details) {
     setState(() => sliderAnimationDuration = 100);
+    widget.onChange(calculatedValue);
   }
 
   @override
   void initState() {
     step = (widget.width - KNOB_SIZE) / (widget.maxValue - widget.minValue);
-    knobX = widget.value * step;
+    knobX = (widget.value * step) + (KNOB_SIZE / 2);
     calculatedValue = widget.value;
     super.initState();
   }

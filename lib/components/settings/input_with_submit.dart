@@ -4,9 +4,10 @@ import 'package:speed_cube_timer/shared/custom_input.dart';
 import 'package:speed_cube_timer/shared/custom_text.dart';
 
 class InputWithSubmit extends StatelessWidget {
+  final Function action;
   final double width;
 
-  InputWithSubmit({this.width});
+  InputWithSubmit(this.action, {this.width});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class InputWithSubmit extends StatelessWidget {
             alignment: Alignment.center,
             child: CustomInput(),
           ),
-          SvgIconButton("assets/icons/check.svg", "check icon", () => null, animate: true)
+          SvgIconButton("assets/icons/check.svg", "check icon", action, animate: true)
         ],
       ),
     );

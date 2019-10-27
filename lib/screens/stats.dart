@@ -6,10 +6,6 @@ import 'package:speed_cube_timer/shared/background.dart';
 import 'package:speed_cube_timer/shared/custom_text.dart';
 
 class Stats extends StatelessWidget {
-    List<Color> gradientColors = [
-    const Color(0xff23b6e6),
-    const Color(0xff02d39a),
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
