@@ -35,10 +35,8 @@ class Background extends StatefulWidget {
 }
 
 class _BackgroundState extends State<Background> {
-  Color readyColor0 = Colors.green;
-  Color readyColor1 = Colors.greenAccent;
-  Color inspectionColor0 = Colors.orange;
-  Color inspectionColor1 = Colors.yellow;
+  double backgroundOpacity;
+  bool showInspectionColor;
 
   void _onTapDown(TapDownDetails details, double paddingTop) {
     if (widget.recordTaps && details.globalPosition.dy > (NAVBAR_HEIGHT + paddingTop)) {
@@ -65,16 +63,22 @@ class _BackgroundState extends State<Background> {
   }
 
   @override
+  void initState() {
+    backgroundOpacity = 0.0;
+    showInspectionColor = false;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double paddingTop = MediaQuery.of(context).padding.top;
 
-    double backgroundOpacity = 0.0;
-    bool showInspectionColor = false;
-
     if (widget.recordTaps) {
-      backgroundOpacity = (widget.gettingReady || widget.ready || widget.runningTimer || 
-        widget.gettingReadyForInspection || widget.readyToInspect || widget.runningInspectionTimer) ? 1.0 : 0.0;
-      showInspectionColor = (widget.allowInspectionTime && !widget.finishedInspection);
+      setState(() {
+        backgroundOpacity = (widget.gettingReady || widget.ready || widget.runningTimer || 
+          widget.gettingReadyForInspection || widget.readyToInspect || widget.runningInspectionTimer) ? 1.0 : 0.0;
+        showInspectionColor = (widget.allowInspectionTime && !widget.finishedInspection);
+      });
     }
 
     return WatchBoxBuilder(
@@ -85,7 +89,7 @@ class _BackgroundState extends State<Background> {
         int linearGradient = box.get("linear_gradient", defaultValue: 0);
         int inspectionColor = box.get("inspection_color", defaultValue: 0);
         int readyColor = box.get("ready_color", defaultValue: 0);
-        
+
         return GestureDetector(
           onTapDown: (TapDownDetails details) => _onTapDown(details, paddingTop),
           onTapUp: (TapUpDetails details) => _onTapUp(details, paddingTop),
