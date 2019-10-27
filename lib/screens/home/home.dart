@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:speed_cube_timer/shared/background.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -9,9 +10,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text("Speed Cube Timer"),
-      )
+      body: Background()
     );
   }
 }

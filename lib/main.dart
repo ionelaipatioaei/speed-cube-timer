@@ -9,7 +9,7 @@ import 'package:speed_cube_timer/screens/home/home.dart';
 void main() async {
   Directory appDocuments = await getApplicationDocumentsDirectory();
   Hive.init(appDocuments.path);
-  await Hive.openBox("background");
+  await Hive.openBox("customize");
   await Hive.openBox("settings");
   // statistics will have multiple boxes for each pratice option, each box will hold 100 records
   // this statistics box will only hold general info, like the current record box
