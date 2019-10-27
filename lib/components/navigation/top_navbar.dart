@@ -33,7 +33,7 @@ class TopNavbar extends StatelessWidget {
           children: <Widget>[
             GestureDetector(
               onTap: () => Navigator.pop(context),
-              child: CustomIcon(src, alt, iconSize)
+              child: CustomIcon("assets/icons/chevron-left.svg", "chevron left icon", iconSize)
             ),
             Container(
               constraints: BoxConstraints.expand(
