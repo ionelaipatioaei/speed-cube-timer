@@ -11,5 +11,5 @@ A cube timer which looks good.
 - Practicing options with different scramble moves
 - Basic algorithms for 3x3x3
 
-## Future idea
+## Future ideas
 - Advanced algorithms
