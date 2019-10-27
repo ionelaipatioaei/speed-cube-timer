@@ -225,6 +225,7 @@ class _HomeState extends State<Home> {
               totalMs: totalMs, showStatus: showStatus, status: status,
               displayWidgets: (runningTimer || runningInspectionTimer),
               liveStopwatch: liveStopwatch, runningTimer: runningTimer, scramble: scramble, 
+              resetCycle: resetCycle,
             )
           ],
         )

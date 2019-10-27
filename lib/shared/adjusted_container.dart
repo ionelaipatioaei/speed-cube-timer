@@ -19,7 +19,7 @@ class AdjustedContainer extends StatelessWidget {
         //   color: Colors.blue
         // ),
         padding: padding,
-        margin: EdgeInsets.only(bottom: bottomBannerAdHeight),
+        margin: EdgeInsets.only(bottom: bottomBannerAdHeight + MediaQuery.of(context).padding.bottom),
         child: child
       )
     );

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:speed_cube_timer/components/common/delete_solve_modal.dart';
 import 'package:speed_cube_timer/components/containers/action_buttons.dart';
 import 'package:speed_cube_timer/components/containers/bottom_stats.dart';
+import 'package:speed_cube_timer/components/custom/custom_modal.dart';
 import 'package:speed_cube_timer/components/custom/custom_text.dart';
 import 'package:speed_cube_timer/shared/adjusted_container.dart';
 import 'package:speed_cube_timer/utils/format_time.dart';
@@ -17,8 +19,9 @@ class RecordActivity extends StatelessWidget {
   final bool liveStopwatch;
   final bool runningTimer;
   final String scramble;
+  final Function resetCycle;
 
-  RecordActivity({this.totalMs, this.showStatus, this.status, this.displayWidgets, this.liveStopwatch, this.runningTimer, this.scramble});
+  RecordActivity({this.totalMs, this.showStatus, this.status, this.displayWidgets, this.liveStopwatch, this.runningTimer, this.scramble, this.resetCycle});
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +76,20 @@ class RecordActivity extends StatelessWidget {
                     child: CustomText(scramble, align: TextAlign.center, size: 16),
                   ) : SizedBox(height: 0),
                   SizedBox(height: 8.0),
-                  ActionButtons(displayWidgets, hideAnimationDuration)
+                  ActionButtons(displayWidgets, hideAnimationDuration,
+                    // resetCycle is called because some time onTapDown from home.dart is called and the home
+                    // screen changes to the inspection/ready color, this prevents that
+                    action0: () {
+                      resetCycle();
+                    },
+                    action1: () {
+                      resetCycle();
+                    },
+                    action2: () {
+                      resetCycle();
+                      Navigator.of(context).push(CustomModal.createRoute(DeleteSolveModal())); 
+                    },
+                  )
                 ],
               ),
               // !TODO: reset the things when clicking on the buttons

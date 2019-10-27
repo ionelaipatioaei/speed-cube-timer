@@ -5,7 +5,11 @@ class ActionButtons extends StatelessWidget {
   final bool running;
   final Duration duration;
 
-  ActionButtons(this.running, this.duration);
+  final Function action0;
+  final Function action1;
+  final Function action2;
+
+  ActionButtons(this.running, this.duration, {this.action0, this.action1, this.action2});
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +20,9 @@ class ActionButtons extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          ActionButton("+2S", "assets/icons/zap.svg", "zap icon", () => null),
-          ActionButton("DNF", "assets/icons/frown.svg", "meh face icon", () => null),
-          ActionButton("DEL", "assets/icons/trash.svg", "trash can icon", () => null),
+          ActionButton("+2S", "assets/icons/zap.svg", "zap icon", action0),
+          ActionButton("DNF", "assets/icons/frown.svg", "meh face icon", action1),
+          ActionButton("DEL", "assets/icons/trash.svg", "trash can icon", action2),
         ],
       ),
     );

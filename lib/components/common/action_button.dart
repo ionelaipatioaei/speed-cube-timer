@@ -16,7 +16,7 @@ class ActionButton extends StatelessWidget {
     return CustomButton(
       action: action,
       margin: EdgeInsets.all(6.0),
-      padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 6.0),
+      padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
       borderRadius: 30.0,
       child: Row(
         children: <Widget>[
