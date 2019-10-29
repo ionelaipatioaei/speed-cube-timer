@@ -6,6 +6,7 @@ class CustomModal {
   static PageRouteBuilder createRoute(Widget child) {
     return PageRouteBuilder(
       opaque: false,
+      maintainState: false,
       transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget transitionChild) {
         Offset begin = Offset(0.0, 1.0);
         Offset end = Offset.zero;
@@ -25,10 +26,12 @@ class CustomModal {
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             alignment: Alignment.center,
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 6.0, sigmaY: 6.0),
-              child: child
-            ),
+            child: ClipRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 6.0, sigmaY: 6.0),
+                child: child
+              ),
+            )
           ),
         );
       }

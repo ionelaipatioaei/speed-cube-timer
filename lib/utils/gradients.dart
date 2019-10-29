@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-const List<List<Color>> readyColors = [
-  [Colors.green, Colors.greenAccent],
-  [Colors.blue, Colors.blueAccent]
+const List<List<Color>> readyColors = const [
+  const [Colors.green, Colors.greenAccent],
+  const [Colors.blue, Colors.blueAccent]
 ];
 
-const List<List<Color>> inspectionColors = [
-  [Colors.yellow, Colors.yellowAccent],
-  [Colors.red, Colors.redAccent]
+const List<List<Color>> inspectionColors = const [
+  const [Colors.yellow, Colors.yellowAccent],
+  const [Colors.red, Colors.redAccent]
 ];
 
-const List<List<Color>> linearGradients = [
-  [Colors.transparent, Colors.transparent],
-  [Colors.pinkAccent, Colors.purple],
-  [Colors.teal, Colors.limeAccent]
+const List<List<Color>> linearGradients = const [
+  const [Colors.transparent, Colors.transparent],
+  const [Colors.pinkAccent, Colors.purple],
+  const [Colors.teal, Colors.limeAccent]
 ];

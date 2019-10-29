@@ -13,7 +13,7 @@ class Credits extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            TopNavbar("Credits", "assets/icons/info.svg", "info icon"),
+            TopNavbar("Credits", "assets/icons/award.svg", "award icon"),
             CustomListView(
               child: ListView(
                 padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: MediaQuery.of(context).size.width * 0.05),

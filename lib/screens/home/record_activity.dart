@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:speed_cube_timer/components/common/delete_solve_modal.dart';
+import 'package:speed_cube_timer/components/containers/delete_solve_modal.dart';
 import 'package:speed_cube_timer/components/containers/action_buttons.dart';
 import 'package:speed_cube_timer/components/containers/bottom_stats.dart';
 import 'package:speed_cube_timer/components/custom/custom_modal.dart';
 import 'package:speed_cube_timer/components/custom/custom_text.dart';
 import 'package:speed_cube_timer/shared/adjusted_container.dart';
 import 'package:speed_cube_timer/utils/format_time.dart';
+import 'package:speed_cube_timer/utils/gen_scramble.dart';
 
 class RecordActivity extends StatelessWidget {
   static const Duration hideAnimationDuration = Duration(milliseconds: 200);
@@ -47,13 +48,14 @@ class RecordActivity extends StatelessWidget {
         box: Hive.box("settings"),
         watchKeys: ["show_scrambling_sequence"],
         builder: (BuildContext context, Box box) {
-          // List<String> options = box.get("options", defaultValue: ["2x2x2", "3x3x3", "4x4x4", "5x5x5", "6x6x6", "7x7x7"]);
-          // int selectedOption = box.get("selected_option", defaultValue: 0);
+          List<String> options = box.get("options", defaultValue: GenScramble.defaultOptions);
+          int selectedOption = box.get("selected_option", defaultValue: 0);
+          String optionName = GenScramble.getOptionName(options[selectedOption]);
           return Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Container(
-                child: CustomText("Currently practicing for 3x3x3", size: 18, align: TextAlign.center, weight: FontWeight.w300,),
+                child: CustomText("Currently practicing for $optionName", size: 18, align: TextAlign.center, weight: FontWeight.w300,),
                 margin: EdgeInsets.only(top: 16.0)
               ),
               Column(
@@ -80,7 +82,6 @@ class RecordActivity extends StatelessWidget {
                     // resetCycle is called because some time onTapDown from home.dart is called and the home
                     // screen changes to the inspection/ready color, this prevents that
                     action0: () {
-                      print(Hive.isBoxOpen("setting"));
                       resetCycle();
                     },
                     action1: () {
