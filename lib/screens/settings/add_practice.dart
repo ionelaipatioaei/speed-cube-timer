@@ -106,12 +106,6 @@ class _AddPracticeState extends State<AddPractice> {
                   CustomText("Note: Separate the moves using ',' with no spaces.", size: 10, color: Colors.white70),
                   CustomSpacer(width),
 
-                  // TextButton("Browse Scrambles", width, 
-                  //   () => Navigator.of(context).push(CustomModal.createRoute(BrowseScramblesModal(
-                  //     (text) => updateScrambleName(text), (text) => updateScrambleMoves(text)
-                  //   ))), 
-                  //   margin: EdgeInsets.only(bottom: 10.0)
-                  // ),
                   TextButton("Browse Scrambles", width, 
                     () => Navigator.push(context, CupertinoPageRoute(builder: (BuildContext context) => BrowseScrambles(
                       (text) => updateScrambleName(text), (text) => updateScrambleMoves(text)
