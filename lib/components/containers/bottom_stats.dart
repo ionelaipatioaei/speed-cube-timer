@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:speed_cube_timer/components/custom/custom_text.dart';
+import 'package:speed_cube_timer/utils/format_time.dart';
 import 'package:speed_cube_timer/utils/gen_scramble.dart';
 
 class BottomStats extends StatefulWidget {
@@ -43,8 +44,8 @@ class _BottomStatsState extends State<BottomStats> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      CustomText("Best time: $bestTime"),
-                      CustomText("Worst time: $worstTime"),
+                      CustomText("Best time: ${msToMinutes(bestTime)}"),
+                      CustomText("Worst time: ${msToMinutes(worstTime)}"),
                       CustomText("Total solves: $totalSolves"),
                       SizedBox(height: 16.0)
                     ],
@@ -53,9 +54,9 @@ class _BottomStatsState extends State<BottomStats> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
-                      CustomText("Average of 5: $avg5"),
-                      CustomText("Average of 12: $avg12"),
-                      CustomText("Average of 50: $avg50"),
+                      CustomText("Average of 5: ${msToMinutes(avg5)}"),
+                      CustomText("Average of 12: ${msToMinutes(avg12)}"),
+                      CustomText("Average of 50: ${msToMinutes(avg50)}"),
                       SizedBox(height: 16.0)
                     ],
                   )

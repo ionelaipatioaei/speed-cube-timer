@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:speed_cube_timer/components/containers/delete_solve_modal.dart';
+import 'package:speed_cube_timer/components/containers/delete_item_modal.dart';
 import 'package:speed_cube_timer/components/containers/action_buttons.dart';
 import 'package:speed_cube_timer/components/containers/bottom_stats.dart';
 import 'package:speed_cube_timer/components/custom/custom_modal.dart';
@@ -21,8 +21,9 @@ class RecordActivity extends StatelessWidget {
   final bool runningTimer;
   final String scramble;
   final Function resetCycle;
+  final Function deleteSolve;
 
-  RecordActivity({this.totalMs, this.showStatus, this.status, this.displayWidgets, this.liveStopwatch, this.runningTimer, this.scramble, this.resetCycle});
+  RecordActivity({this.totalMs, this.showStatus, this.status, this.displayWidgets, this.liveStopwatch, this.runningTimer, this.scramble, this.resetCycle, this.deleteSolve});
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +90,7 @@ class RecordActivity extends StatelessWidget {
                     },
                     action2: () {
                       resetCycle();
-                      Navigator.of(context).push(CustomModal.createRoute(DeleteSolveModal())); 
+                      Navigator.of(context).push(CustomModal.createRoute(DeleteItemModal("Do you want to delete this solve?", deleteSolve))); 
                     },
                   )
                 ],

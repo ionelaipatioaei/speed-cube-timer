@@ -182,6 +182,10 @@ class _HomeState extends State<Home> {
     });
   }
 
+  void deleteSolve() {
+    Solve.deleteLastSolve();
+  }
+
   @override
   void initState() {
     liveStopwatch = settings.get("live_stopwatch", defaultValue: true);
@@ -232,7 +236,7 @@ class _HomeState extends State<Home> {
               totalMs: totalMs, showStatus: showStatus, status: status,
               displayWidgets: (runningTimer || runningInspectionTimer),
               liveStopwatch: liveStopwatch, runningTimer: runningTimer, scramble: scramble, 
-              resetCycle: resetCycle,
+              resetCycle: resetCycle, deleteSolve: deleteSolve,
             )
           ],
         )
