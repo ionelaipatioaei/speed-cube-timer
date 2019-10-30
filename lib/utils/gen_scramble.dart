@@ -1,3 +1,5 @@
+import 'dart:math';
+
 class GenScramble {
   static const List<String> defaultOptions = const [
     "2x2x2:2x2x2:F,R,U,L,B,D,F',R',U',L',B',D',F2,R2,U2,L2,B2,D2",
@@ -22,11 +24,16 @@ class GenScramble {
     return optionProperties[2].split(",");
   }
 
-  static String genScramble(int length, String scramble) {
-    String temp;
-
+  static String genScramble(int length, List<String> scramble) {
+    Random rng = Random();
+    int totalMoves = scramble.length;
+    String temp = "";
+    for (int i = 0; i < length; i++) {
+      temp += scramble[rng.nextInt(totalMoves)];
+      if (i != length - 1) {
+        temp += " ";
+      }
+    }
     return temp;
-
   }
-
 }

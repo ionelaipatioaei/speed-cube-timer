@@ -1,14 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:speed_cube_timer/components/common/text_button.dart';
 import 'package:speed_cube_timer/components/containers/add_pratice_warning_modal.dart';
-import 'package:speed_cube_timer/components/containers/browse_scrambles_modal.dart';
 import 'package:speed_cube_timer/components/custom/custom_input.dart';
 import 'package:speed_cube_timer/components/custom/custom_list_view.dart';
 import 'package:speed_cube_timer/components/custom/custom_modal.dart';
 import 'package:speed_cube_timer/components/custom/custom_spacer.dart';
 import 'package:speed_cube_timer/components/custom/custom_text.dart';
 import 'package:speed_cube_timer/components/navigation/top_navbar.dart';
+import 'package:speed_cube_timer/screens/settings/browse_scrambles.dart';
 import 'package:speed_cube_timer/shared/background.dart';
 import 'package:speed_cube_timer/utils/gen_scramble.dart';
 
@@ -105,8 +106,14 @@ class _AddPracticeState extends State<AddPractice> {
                   CustomText("Note: Separate the moves using ',' with no spaces.", size: 10, color: Colors.white70),
                   CustomSpacer(width),
 
+                  // TextButton("Browse Scrambles", width, 
+                  //   () => Navigator.of(context).push(CustomModal.createRoute(BrowseScramblesModal(
+                  //     (text) => updateScrambleName(text), (text) => updateScrambleMoves(text)
+                  //   ))), 
+                  //   margin: EdgeInsets.only(bottom: 10.0)
+                  // ),
                   TextButton("Browse Scrambles", width, 
-                    () => Navigator.of(context).push(CustomModal.createRoute(BrowseScramblesModal(
+                    () => Navigator.push(context, CupertinoPageRoute(builder: (BuildContext context) => BrowseScrambles(
                       (text) => updateScrambleName(text), (text) => updateScrambleMoves(text)
                     ))), 
                     margin: EdgeInsets.only(bottom: 10.0)

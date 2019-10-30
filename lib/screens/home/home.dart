@@ -5,6 +5,8 @@ import 'package:hive/hive.dart';
 import 'package:speed_cube_timer/components/navigation/top_menu.dart';
 import 'package:speed_cube_timer/screens/home/record_activity.dart';
 import 'package:speed_cube_timer/shared/background.dart';
+import 'package:speed_cube_timer/utils/gen_scramble.dart';
+import 'package:speed_cube_timer/utils/solve.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -21,7 +23,7 @@ class _HomeState extends State<Home> {
 
   bool showStatus = true;
   String status = "Long press to get ready!";
-  String scramble = "F2 D2 F U2 F' U2 L2";
+  String scramble = "Generating...";
   int totalMs = 0;
 
   // this values need to come from hive
@@ -42,6 +44,12 @@ class _HomeState extends State<Home> {
   bool gettingReady = false;
   bool ready = false;
   bool runningTimer = false;
+
+  List<String> getScrambleMoves() {
+    List<String> options = settings.get("options", defaultValue: GenScramble.defaultOptions);
+    int selected = settings.get("selected_option", defaultValue: 0);
+    return GenScramble.getScrambleMoves(options[selected]);
+  }
 
   // a few notes on how the functions are triggered
   // onTapDown is always fired when the user touches the screen no matter what
@@ -83,7 +91,7 @@ class _HomeState extends State<Home> {
         totalMs = stopwatch.elapsedMilliseconds;
       });
       // record the solve stats
-
+      Solve.saveSolve(DateTime.now().millisecondsSinceEpoch, scramble, allowInspectionTime, inspectionTime, totalMs, false, false);
 
       resetCycle();
       stopwatch.reset();
@@ -93,7 +101,7 @@ class _HomeState extends State<Home> {
   }
 
   void onTapUp() {
-    // setState(() => scramble = genSramblingSequence(scramblingSequenceLength));
+    setState(() => scramble = GenScramble.genScramble(scramblingSequenceLength, getScrambleMoves()));
 
     if (allowInspectionTime && !finishedInspection && !(runningInspectionTimer && runningTimer)) {
       setState(() => gettingReadyForInspection = false);
@@ -178,11 +186,10 @@ class _HomeState extends State<Home> {
   void initState() {
     liveStopwatch = settings.get("live_stopwatch", defaultValue: true);
     allowInspectionTime = settings.get("allow_inspection_time", defaultValue: false);
-    // allowInspectionTime = true;
     inspectionTime = settings.get("inspection_time", defaultValue: 15000);
     showScramblingSequence = settings.get("show_scrambling_sequence", defaultValue: true);
     scramblingSequenceLength = settings.get("scrambling_sequence_length", defaultValue: 16);
-    // scramble = genSramblingSequence(scramblingSequenceLength);
+    scramble = GenScramble.genScramble(scramblingSequenceLength, getScrambleMoves());
 
     if (allowInspectionTime) {
       status = "Long press to get ready for inspection!";
