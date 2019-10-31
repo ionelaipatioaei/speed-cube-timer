@@ -26,8 +26,13 @@ class RecordActivity extends StatelessWidget {
   final bool dnf;
   final Function updatePlus2S;
   final Function updateDnf;
+  final Function resetEverything;
 
-  RecordActivity({this.totalMs, this.showStatus, this.status, this.displayWidgets, this.liveStopwatch, this.runningTimer, this.scramble, this.resetCycle, this.deleteSolve, this.plus2S, this.dnf, this.updatePlus2S, this.updateDnf});
+  RecordActivity({
+    this.totalMs, this.showStatus, this.status, this.displayWidgets, this.liveStopwatch, 
+    this.runningTimer, this.scramble, this.resetCycle, this.deleteSolve, this.plus2S, 
+    this.dnf, this.updatePlus2S, this.updateDnf, this.resetEverything
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +61,10 @@ class RecordActivity extends StatelessWidget {
           List<String> options = box.get("options", defaultValue: GenScramble.defaultOptions);
           int selectedOption = box.get("selected_option", defaultValue: 0);
           String optionName = GenScramble.getOptionName(options[selectedOption]);
+          // print("hello");
+          box.watch(key: "selected_option").listen((BoxEvent event) {
+            resetEverything();
+          });
           return Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -101,7 +110,7 @@ class RecordActivity extends StatelessWidget {
                     },
                     action2: () {
                       resetCycle();
-                      Navigator.of(context).push(CustomModal.createRoute(DeleteItemModal("Do you want to delete this solve?", deleteSolve))); 
+                      deleteSolve(); 
                     },
                   )
                 ],

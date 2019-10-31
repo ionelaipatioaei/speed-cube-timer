@@ -4,7 +4,7 @@ String formatSeconds(int seconds) => seconds > 9 ? seconds.toString() : seconds.
 
 String formatMs(int ms) => ms.toString().length < 3 ? ms.toString().padRight(3, "0") : ms.toString();
 
-String msToMinutes(int totalMs) {
+String msToMinutes(int totalMs, {bool small = false}) {
   int mins = 0;
   int secs = 0;
   int ms = 0;
@@ -19,8 +19,10 @@ String msToMinutes(int totalMs) {
     }
   }
   if (mins > 0) {
+    if (small) return "${mins}m:$secs.${ms ~/ 100}s";
     return "${mins}m:$secs.${ms ~/ 10}s";
   } else {
+    if (small) return "$secs.${ms ~/ 10}s";
     return "$secs.${ms ~/ 10}s";
   }
 }

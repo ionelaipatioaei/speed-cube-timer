@@ -200,7 +200,7 @@ class Solve {
       statistics.put("stats_${name}_worst_time", lastStat);
     }
 
-    // this can be refactored in nicer function
+    // TODO: this can be refactored in nicer function
     if (stats.length >= 5) {
       List<int> last5 = stats.skip(stats.length - 5).take(5).toList();
       int sum5 = last5.reduce((int curr, int next) => curr + next);

@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:speed_cube_timer/components/containers/delete_item_modal.dart';
+import 'package:speed_cube_timer/components/custom/custom_modal.dart';
 import 'package:speed_cube_timer/components/navigation/top_menu.dart';
 import 'package:speed_cube_timer/screens/home/record_activity.dart';
 import 'package:speed_cube_timer/shared/background.dart';
@@ -207,17 +209,30 @@ class _HomeState extends State<Home> {
     });
   }
 
+  void resetEverything() {
+    resetCycle();
+    setState(() {
+      solveFinished = false;
+      status = allowInspectionTime ? "Long press to get ready for inspection!" : "Long press to get ready";
+      plus2S = false;
+      dnf = false;
+    });
+  }
+
   void deleteSolve() {
     if (solveFinished) {
-      Solve.deleteLastSolve();
-      resetCycle();
-      setState(() {
-        status = allowInspectionTime ? "Long press to get ready for inspection!" : "Long press to get ready";
-        plus2S = false;
-        dnf = false;
-        solveFinished = false;
-        totalMs = 0;
-      });
+      Navigator.of(context).push(CustomModal.createRoute(DeleteItemModal("Do you want to delete this solve?", () {
+        Solve.deleteLastSolve();
+        resetCycle();
+        setState(() {
+          totalMs = 0;
+          status = allowInspectionTime ? "Long press to get ready for inspection!" : "Long press to get ready";
+          plus2S = false;
+          dnf = false;
+          solveFinished = false;
+        });
+        stopwatch.reset();
+      })));
     }
   }
 
@@ -291,7 +306,7 @@ class _HomeState extends State<Home> {
               totalMs: totalMs, showStatus: showStatus, status: status,
               displayWidgets: (runningTimer || runningInspectionTimer),
               liveStopwatch: liveStopwatch, runningTimer: runningTimer, scramble: scramble, 
-              resetCycle: resetCycle, deleteSolve: deleteSolve,
+              resetCycle: resetCycle, deleteSolve: deleteSolve, resetEverything: resetEverything,
               plus2S: plus2S, dnf: dnf, updatePlus2S: updatePlus2S, updateDnf: updateDnf,
             )
           ],
