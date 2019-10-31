@@ -8,8 +8,9 @@ class ActionButton extends StatelessWidget {
   final String src;
   final String alt;
   final Function action;
+  final bool checked;
 
-  ActionButton(this.text, this.src, this.alt, this.action);
+  ActionButton(this.text, this.src, this.alt, this.action, this.checked);
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +19,7 @@ class ActionButton extends StatelessWidget {
       margin: EdgeInsets.all(6.0),
       padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
       borderRadius: 30.0,
+      startOpacity: checked ? 0.3 : 0.12,
       child: Row(
         children: <Widget>[
           CustomIcon(src, alt, 20.0),

@@ -22,8 +22,12 @@ class RecordActivity extends StatelessWidget {
   final String scramble;
   final Function resetCycle;
   final Function deleteSolve;
+  final bool plus2S;
+  final bool dnf;
+  final Function updatePlus2S;
+  final Function updateDnf;
 
-  RecordActivity({this.totalMs, this.showStatus, this.status, this.displayWidgets, this.liveStopwatch, this.runningTimer, this.scramble, this.resetCycle, this.deleteSolve});
+  RecordActivity({this.totalMs, this.showStatus, this.status, this.displayWidgets, this.liveStopwatch, this.runningTimer, this.scramble, this.resetCycle, this.deleteSolve, this.plus2S, this.dnf, this.updatePlus2S, this.updateDnf});
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +74,11 @@ class RecordActivity extends StatelessWidget {
                     duration: hideAnimationDuration,
                     margin: EdgeInsets.only(bottom: displayWidgets ? 48.0 : 12.0)
                   ),
+                  // AnimatedOpacity(
+                  //   duration: hideAnimationDuration,
+                  //   opacity: displayWidgets ? 0.0 : 1.0,
+                  //   child: CustomText("+2S DNF", align: TextAlign.center, size: 12),
+                  // ),
                   CustomText(!displayWidgets || liveStopwatch || !runningTimer ? 
                     "${formatMinutes(mins)}:${formatSeconds(secs)}:${formatMs(ms)}" : "", 
                     align: TextAlign.center, size: 42),
@@ -79,14 +88,16 @@ class RecordActivity extends StatelessWidget {
                     child: CustomText(scramble, align: TextAlign.center, size: 16),
                   ) : SizedBox(height: 0),
                   SizedBox(height: 8.0),
-                  ActionButtons(displayWidgets, hideAnimationDuration,
+                  ActionButtons(displayWidgets, hideAnimationDuration, plus2S, dnf,
                     // resetCycle is called because some time onTapDown from home.dart is called and the home
                     // screen changes to the inspection/ready color, this prevents that
                     action0: () {
                       resetCycle();
+                      updatePlus2S();
                     },
                     action1: () {
                       resetCycle();
+                      updateDnf();
                     },
                     action2: () {
                       resetCycle();

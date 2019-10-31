@@ -44,6 +44,11 @@ class _HomeState extends State<Home> {
   bool gettingReady = false;
   bool ready = false;
   bool runningTimer = false;
+  bool solveFinished = false;
+
+  bool plus2S = false;
+  bool dnf = false;
+
 
   List<String> getScrambleMoves() {
     List<String> options = settings.get("options", defaultValue: GenScramble.defaultOptions);
@@ -89,15 +94,22 @@ class _HomeState extends State<Home> {
       stopwatch.stop();
       setState(() {
         totalMs = stopwatch.elapsedMilliseconds;
+        solveFinished = true;
       });
       // record the solve stats
-      Solve.saveSolve(DateTime.now().millisecondsSinceEpoch, scramble, allowInspectionTime, inspectionTime, totalMs, false, false);
+      Solve.saveSolve(DateTime.now().millisecondsSinceEpoch, scramble, allowInspectionTime, inspectionTime, totalMs, plus2S, dnf);
 
       resetCycle();
-      stopwatch.reset();
+      setState(() {
+        status = allowInspectionTime ? "Long press to get ready for inspection!" : "Long press to get ready";
+        plus2S = false;
+        dnf = false;
+      });
+      
     }
 
     print("ON TAP DOWN");
+    print("GRFI: $gettingReadyForInspection | RTI: $readyToInspect | RIT: $runningInspectionTimer | FI: $finishedInspection | GR: $gettingReady | R: $ready | RT: $runningTimer | SF: $solveFinished | P2S: $plus2S | DNF: $dnf");
   }
 
   void onTapUp() {
@@ -112,6 +124,7 @@ class _HomeState extends State<Home> {
     }
 
     print("ON TAP UP");
+    print("GRFI: $gettingReadyForInspection | RTI: $readyToInspect | RIT: $runningInspectionTimer | FI: $finishedInspection | GR: $gettingReady | R: $ready | RT: $runningTimer | SF: $solveFinished | P2S: $plus2S | DNF: $dnf");
   }
 
   void onLongPressStart() {
@@ -120,7 +133,10 @@ class _HomeState extends State<Home> {
         status = "Lift your finger to start inspection!";
         totalMs = inspectionTime;
         readyToInspect = true;
+        plus2S = false;
+        dnf = false;
        });
+       stopwatch.reset();
     }
 
     if ((finishedInspection || !allowInspectionTime) && !ready) {
@@ -128,10 +144,14 @@ class _HomeState extends State<Home> {
         status = "Lift your finger to start!";
         totalMs = 0;
         ready = true;
+        plus2S = false;
+        dnf = false;
        });
+       stopwatch.reset();
     }
 
     print("ON LONG PRESS START");
+    print("GRFI: $gettingReadyForInspection | RTI: $readyToInspect | RIT: $runningInspectionTimer | FI: $finishedInspection | GR: $gettingReady | R: $ready | RT: $runningTimer | SF: $solveFinished | P2S: $plus2S | DNF: $dnf");
   }
 
   void onLongPressEnd() {
@@ -139,18 +159,21 @@ class _HomeState extends State<Home> {
       setState(() {
         showStatus = false;
         runningInspectionTimer = true;
+        solveFinished = false;
        });
     }
 
     if ((finishedInspection || !allowInspectionTime) && ready) {
       stopwatch.start();
       setState(() {
-        runningTimer = true;
         showStatus = false;
+        runningTimer = true;
+        solveFinished = false;
        });
     }
 
     print("ON LONG PRESS END");
+    print("GRFI: $gettingReadyForInspection | RTI: $readyToInspect | RIT: $runningInspectionTimer | FI: $finishedInspection | GR: $gettingReady | R: $ready | RT: $runningTimer | SF: $solveFinished | P2S: $plus2S | DNF: $dnf");
   }
 
   void updateCounter(Timer timer) {
@@ -171,7 +194,7 @@ class _HomeState extends State<Home> {
   void resetCycle() {
     setState(() {
       showStatus = true;
-      status = allowInspectionTime ? "Long press to get ready for inspection!" : "Long press to get ready";
+      // status = allowInspectionTime ? "Long press to get ready for inspection!" : "Long press to get ready";
       gettingReadyForInspection = false;
       readyToInspect = false;
       runningInspectionTimer = false;
@@ -179,11 +202,43 @@ class _HomeState extends State<Home> {
       gettingReady = false;
       ready = false;
       runningTimer = false;
+      // plus2S = false;
+      // dnf = false;
     });
   }
 
   void deleteSolve() {
-    Solve.deleteLastSolve();
+    if (solveFinished) {
+      Solve.deleteLastSolve();
+      resetCycle();
+      setState(() {
+        status = allowInspectionTime ? "Long press to get ready for inspection!" : "Long press to get ready";
+        plus2S = false;
+        dnf = false;
+        solveFinished = false;
+        totalMs = 0;
+      });
+    }
+  }
+
+  void updatePlus2S() {
+    if (solveFinished) {
+      setState(() {
+        plus2S = !plus2S;
+        totalMs = plus2S ? totalMs + 2000 : stopwatch.elapsedMilliseconds;
+      });
+      Solve.updatePlus2SDnf(plus2S, dnf);
+    }
+  } 
+
+  void updateDnf() {
+    if (solveFinished) {
+      setState(() {
+        dnf = !dnf;
+        totalMs = dnf ? 0 : stopwatch.elapsedMilliseconds;
+      });
+      Solve.updatePlus2SDnf(plus2S, dnf);
+    }
   }
 
   @override
@@ -237,6 +292,7 @@ class _HomeState extends State<Home> {
               displayWidgets: (runningTimer || runningInspectionTimer),
               liveStopwatch: liveStopwatch, runningTimer: runningTimer, scramble: scramble, 
               resetCycle: resetCycle, deleteSolve: deleteSolve,
+              plus2S: plus2S, dnf: dnf, updatePlus2S: updatePlus2S, updateDnf: updateDnf,
             )
           ],
         )

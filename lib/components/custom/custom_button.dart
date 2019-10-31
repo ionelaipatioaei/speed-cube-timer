@@ -20,6 +20,7 @@ class CustomButton extends StatefulWidget {
 
 class _CustomButtonState extends State<CustomButton> {
   double opacity;
+  Timer timer;
 
   void animatePress() {
     setState(() => opacity = widget.endOpacity);
@@ -27,10 +28,26 @@ class _CustomButtonState extends State<CustomButton> {
     Timer(Duration(milliseconds: 150), () => setState(() => opacity = widget.startOpacity));
   }
 
+  void resetOpacity(Timer timer) {
+    // soo stupid...
+    setState(() => opacity = widget.startOpacity);
+    // print("really?");
+  }
+
   @override
   void initState() {
     opacity = widget.startOpacity;
+    // this is one of the most stupid way to reset a toggle...
+    // TODO: find a better way to do this
+    timer = Timer.periodic(Duration(milliseconds: 1000), resetOpacity);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    timer = null;
+    super.dispose();
   }
 
   @override
