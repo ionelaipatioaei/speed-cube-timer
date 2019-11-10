@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:speed_cube_timer/screens/home/home.dart';
+import 'package:speed_cube_timer/utils/iap_config.dart';
 import 'package:speed_cube_timer/utils/solve.dart';
 
 void main() async {
@@ -12,11 +13,9 @@ void main() async {
   Hive.init(appDocuments.path);
   await Hive.openBox("customize");
   await Hive.openBox("settings");
-  await Hive.openBox("iap");
-  // statistics will have multiple boxes for each pratice option, each box will hold 100 records
-  // this statistics box will only hold general info, like the current record box
-  // index and the averages of 5, 12, 50, best time, total solves, etc
-  // the idea is to prevent the statistics box to get huge and slow
+  await Hive.openBox("unlocked");
+  
+  // check the formar version of the statistics
   await Hive.openBox("statistics");
   Box statistics = Hive.box("statistics");
   int statsFormatVersion = statistics.get("stats_format_number");
@@ -25,6 +24,18 @@ void main() async {
   } else if (statsFormatVersion != Solve.statsFormatVersion) {
     print("Found stats format version: $statsFormatVersion but the current version is: ${Solve.statsFormatVersion}.");
   }
+
+  // init the iaps by placing the default values in firebase if there are none
+  IAPConfig.init();
+
+  // check too see how many backgrounds where the last time and update the number accordingly
+  // Box unlocked = Hive.box("unlocked");
+  // int updatedTotalBackgrounds = IAPConfig.totalBackgrounds;
+  // int totalBackgrounds = unlocked.get("total_backgrounds", defaultValue: updatedTotalBackgrounds);
+  // if (totalBackgrounds != updatedTotalBackgrounds) {
+  //   print("Found only $totalBackgrounds total backgrounds and there are $updatedTotalBackgrounds now, updating...");
+  //   IAPConfig.updateBackgrounds();
+  // }
 
   runApp(App());
 }
