@@ -3,6 +3,7 @@ import 'package:speed_cube_timer/utils/gen_scramble.dart';
 
 class Solve {
   static const int maxBoxSize = 512;
+  static const int statsFormatVersion = 0;
 
   static Future<void> saveSolve(int date, String scramble, bool inspected, int inspectionTime, int solveTime, bool plus2S, bool dnf) async {
     Box settings = Hive.box("settings");
@@ -191,13 +192,14 @@ class Solve {
     int updatedTotalSolves = (maxBoxSize * boxIndex) + lastStatsBox.length;
     statistics.put("stats_${name}_total_solves", updatedTotalSolves);
 
-    int lastIndex = stats.length - 1 >= 0 ? stats.length - 1 : 0;
-    int lastStat = stats[lastIndex];
-    if (lastStat < bestTime && lastStat > 0) {
-      statistics.put("stats_${name}_best_time", lastStat);
-    }
-    if (worstTime < lastStat) {
-      statistics.put("stats_${name}_worst_time", lastStat);
+    if (stats.isNotEmpty) {
+      int lastStat = stats[stats.length - 1];
+      if (lastStat < bestTime && lastStat > 0) {
+        statistics.put("stats_${name}_best_time", lastStat);
+      }
+      if (worstTime < lastStat) {
+        statistics.put("stats_${name}_worst_time", lastStat);
+      }
     }
 
     // TODO: this can be refactored in nicer function
@@ -243,15 +245,19 @@ class Solve {
     List<int> stats = await getStats(totalSolves);
     // print(stats);
 
-    int minValue = stats[0];
-    int maxValue = stats[0];
-    stats.skip(1).forEach((int stat) {
-      // this is needed in order to skip dnfs which makes the time 0
-      if (stat > 0) minValue = minValue.compareTo(stat) >= 0 ? stat : minValue;
-      maxValue = maxValue.compareTo(stat) >= 0 ? maxValue : stat;
-    });
-
-    statistics.put("stats_${name}_best_time", minValue);
-    statistics.put("stats_${name}_worst_time", maxValue);
+    if (stats.isNotEmpty) {
+      int minValue = stats[0];
+      int maxValue = stats[0];
+      stats.skip(1).forEach((int stat) {
+        // this is needed in order to skip dnfs which makes the time 0
+        if (stat > 0) minValue = minValue.compareTo(stat) >= 0 ? stat : minValue;
+        maxValue = maxValue.compareTo(stat) >= 0 ? maxValue : stat;
+      });
+      statistics.put("stats_${name}_best_time", minValue);
+      statistics.put("stats_${name}_worst_time", maxValue);
+    } else {
+      statistics.delete("stats_${name}_best_time");
+      statistics.delete("stats_${name}_worst_time");
+    }
   }
 }

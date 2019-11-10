@@ -29,18 +29,18 @@ class _StatisticsState extends State<Statistics> {
   double interval;
 
   void init() async {
-    List<int> temp = await Solve.getStats(30);
-    Future.delayed(Duration(milliseconds: 300), () =>
-      setState(() {
-        if (temp.length >= 2) {
-          stats = temp;
-          minValue = stats.reduce(min) / 1000;
-          maxValue = stats.reduce(max) / 1000;
-          spots = genSpots(stats);
-          interval = (maxValue - minValue) / stats.length;
-        }
-      })
-    );
+    Future.delayed(Duration(milliseconds: 300), () async {
+      List<int> temp = await Solve.getStats(30);
+      if (temp.length >= 2) {
+        setState(() {
+            stats = temp;
+            minValue = stats.reduce(min) / 1000;
+            maxValue = stats.reduce(max) / 1000;
+            spots = genSpots(stats);
+            interval = (maxValue - minValue) / stats.length;
+        });
+      }
+    });
     print(stats);
   }
 
@@ -52,7 +52,13 @@ class _StatisticsState extends State<Statistics> {
     int selected = settings.get("selected_option", defaultValue: 0);
     String name = GenScramble.getOptionName(options[selected]);
 
-    stats = [statistics.get("stats_${name}_worst_time", defaultValue: 1000), statistics.get("stats_${name}_best_time", defaultValue: 0)];
+    int bestTime = statistics.get("stats_${name}_worst_time", defaultValue: 0);
+    int worstTime = statistics.get("stats_${name}_best_time", defaultValue: 1000);
+    if (bestTime != worstTime) {
+      stats = [worstTime, bestTime];
+    } else {
+      stats = [1000, 0];
+    }
     minValue = stats.reduce(min) / 1000;
     maxValue = stats.reduce(max) / 1000;
     spots = genSpots(stats);

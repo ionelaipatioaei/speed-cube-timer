@@ -1,3 +1,8 @@
+/promo_assets
+
+# Androind signing key
+android/key.properties
+
 # Firebase config
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
