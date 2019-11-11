@@ -17,7 +17,9 @@ import 'package:speed_cube_timer/screens/info/credits.dart';
 import 'package:speed_cube_timer/screens/info/privacy_policy.dart';
 import 'package:speed_cube_timer/screens/settings/select_practice.dart';
 import 'package:speed_cube_timer/shared/background.dart';
+import 'package:speed_cube_timer/utils/buy_iap.dart';
 import 'package:speed_cube_timer/utils/gen_scramble.dart';
+import 'package:speed_cube_timer/utils/iap_config.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -33,8 +35,11 @@ class _SettingsState extends State<Settings> {
   bool showScramblingSequence;
   int scramblingSequenceLength;
 
+  BuyIAP buyIAP = BuyIAP(() => IAPConfig.confirmPurchase());
+
   @override
   void initState() {
+    buyIAP.initialize();
     liveStopwatch = settings.get("live_stopwatch", defaultValue: true);
     allowInspectionTime = settings.get("allow_inspection_time", defaultValue: false);
     inspectionTime = settings.get("inspection_time", defaultValue: 15000);
@@ -118,7 +123,7 @@ class _SettingsState extends State<Settings> {
                   TextButton("Credits", width, () => Navigator.push(context, CupertinoPageRoute(builder: (BuildContext context) => Credits()))),
                   CustomSpacer(width),
 
-                  DoubleTextButton("Remove All Ads &", "Unlock All Customizations", width, () => null),
+                  DoubleTextButton("Remove All Ads &", "Unlock All Customizations", width, () => buyIAP.buyRemoveAllAdsUnlockAllCustomizations()),
                 ]
               )
             )

@@ -18,7 +18,15 @@ class Algorithms extends StatelessWidget {
               child: ListView(
                 padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: MediaQuery.of(context).size.width * 0.05),
                 children: <Widget>[
-                  CustomText("Algorithms")
+                  Container(
+                    constraints: BoxConstraints.expand(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height - 160
+                    ),
+                    child: Center(
+                      child: CustomText("Coming soon!", size: 28)
+                    )
+                  )
                 ]
               )
             )

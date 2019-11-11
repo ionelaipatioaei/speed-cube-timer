@@ -8,7 +8,7 @@ class AdjustedContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double bottomBannerAdHeight = 0.0;
+    const double bottomBannerAdHeight = 60.0;
     return Expanded(
       child: Container(
         constraints: BoxConstraints.expand(
