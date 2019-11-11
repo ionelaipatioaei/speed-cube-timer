@@ -108,7 +108,7 @@ class IAPConfig {
 
   static List<bool> getUnlockedBackgrounds() {
     Box unlocked = Hive.box("unlocked");
-    List<bool> backgrounds = unlocked.get("backgrounds");
+    List<dynamic> backgrounds = unlocked.get("backgrounds");
     return backgrounds;
   }
 }

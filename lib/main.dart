@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
@@ -28,19 +29,21 @@ void main() async {
   // init the iaps by placing the default values in firebase if there are none
   IAPConfig.init();
 
-  // check too see how many backgrounds where the last time and update the number accordingly
-  // Box unlocked = Hive.box("unlocked");
-  // int updatedTotalBackgrounds = IAPConfig.totalBackgrounds;
-  // int totalBackgrounds = unlocked.get("total_backgrounds", defaultValue: updatedTotalBackgrounds);
-  // if (totalBackgrounds != updatedTotalBackgrounds) {
-  //   print("Found only $totalBackgrounds total backgrounds and there are $updatedTotalBackgrounds now, updating...");
-  //   IAPConfig.updateBackgrounds();
-  // }
-
   runApp(App());
 }
 
 class App extends StatelessWidget {
+  // show the bottom ad
+  BannerAd bottomBanner = BannerAd(
+    adUnitId: BannerAd.testAdUnitId,
+    size: AdSize.smartBanner,
+    // targetingInfo: targetingInfo,
+    listener: (MobileAdEvent event) {
+      print("BannerAd event is $event");
+    },
+  );
+
+  
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -48,6 +51,16 @@ class App extends StatelessWidget {
       // for some reason these values are switched
       statusBarBrightness: Platform.isIOS ? Brightness.dark : Brightness.light,
     ));
+
+    Hive.box("unlocked").watch(key: "remove_all_ads_unlock_all_customizations").listen((event) {
+      if (event.value) {
+        bottomBanner.dispose();
+      }
+    });
+
+    if (!(Hive.box("unlocked").get("remove_all_ads_unlock_all_customizations", defaultValue: false))) {
+      bottomBanner..load()..show();
+    }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Speed Cube Timer",
