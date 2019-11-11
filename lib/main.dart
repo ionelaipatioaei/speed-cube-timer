@@ -16,7 +16,7 @@ void main() async {
   await Hive.openBox("settings");
   await Hive.openBox("unlocked");
   
-  // check the formar version of the statistics
+  // check the format version of the statistics
   await Hive.openBox("statistics");
   Box statistics = Hive.box("statistics");
   int statsFormatVersion = statistics.get("stats_format_number");
@@ -34,7 +34,7 @@ void main() async {
 
 class App extends StatelessWidget {
   // show the bottom ad
-  BannerAd bottomBanner = BannerAd(
+  final BannerAd bottomBanner = BannerAd(
     adUnitId: BannerAd.testAdUnitId,
     size: AdSize.smartBanner,
     // targetingInfo: targetingInfo,

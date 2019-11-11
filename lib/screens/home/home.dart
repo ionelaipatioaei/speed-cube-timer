@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:speed_cube_timer/components/containers/delete_item_modal.dart';
@@ -51,12 +52,22 @@ class _HomeState extends State<Home> {
   bool plus2S = false;
   bool dnf = false;
 
+  // only so I can show an interstitial ad every n solves
+  int tempTotalSolves = 0;
 
   List<String> getScrambleMoves() {
     List<String> options = settings.get("options", defaultValue: GenScramble.defaultOptions);
     int selected = settings.get("selected_option", defaultValue: 0);
     return GenScramble.getScrambleMoves(options[selected]);
   }
+
+  InterstitialAd interstitialAd = InterstitialAd(
+    adUnitId: InterstitialAd.testAdUnitId,
+    // targetingInfo: targetingInfo,
+    listener: (MobileAdEvent event) {
+      print("InterstitialAd event is $event");
+    },
+  );
 
   // a few notes on how the functions are triggered
   // onTapDown is always fired when the user touches the screen no matter what
@@ -97,7 +108,15 @@ class _HomeState extends State<Home> {
       setState(() {
         totalMs = stopwatch.elapsedMilliseconds;
         solveFinished = true;
+        tempTotalSolves++;
       });
+
+      if (!Hive.box("unlocked").get("remove_all_ads_unlock_all_customizations", defaultValue: false)) {
+        if ((tempTotalSolves % 7 == 0 && totalMs > 30000) || (tempTotalSolves % 13 == 0 && totalMs < 30000)) {
+          interstitialAd.show();
+        }
+      }
+
       // record the solve stats
       Solve.saveSolve(DateTime.now().millisecondsSinceEpoch, scramble, allowInspectionTime, inspectionTime, totalMs, plus2S, dnf);
 
@@ -107,7 +126,6 @@ class _HomeState extends State<Home> {
         plus2S = false;
         dnf = false;
       });
-      
     }
 
     print("ON TAP DOWN");
@@ -269,6 +287,15 @@ class _HomeState extends State<Home> {
       status = "Long press to get ready for inspection!";
     }
     timer = Timer.periodic(Duration(milliseconds: updateTimeMs), updateCounter);
+    if (!Hive.box("unlocked").get("remove_all_ads_unlock_all_customizations", defaultValue: false)) {
+      interstitialAd.load();
+      interstitialAd.listener = (MobileAdEvent event) {
+        if (event == MobileAdEvent.closed) {
+          interstitialAd.dispose();
+          interstitialAd.load();
+        }
+      };
+    }
     super.initState();
   }
 
@@ -280,7 +307,7 @@ class _HomeState extends State<Home> {
   }
   
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
     return Scaffold(
       body: Background(
         recordTaps: true,
