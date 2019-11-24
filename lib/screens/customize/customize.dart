@@ -1,8 +1,10 @@
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
+import 'package:speed_cube_timer/components/containers/add_pratice_warning_modal.dart';
 import 'package:speed_cube_timer/components/containers/buy_iap_button.dart';
 import 'package:speed_cube_timer/components/containers/mesh_thumbnail.dart';
 import 'package:speed_cube_timer/components/custom/custom_list_view.dart';
+import 'package:speed_cube_timer/components/custom/custom_modal.dart';
 import 'package:speed_cube_timer/components/navigation/top_navbar.dart';
 import 'package:speed_cube_timer/shared/background.dart';
 import 'package:speed_cube_timer/utils/iap_config.dart';
@@ -24,7 +26,7 @@ class _CustomizeState extends State<Customize> {
     for (int i = 0; i < totalRows; i++) {
       List<Widget> temp = List<Widget>();
       for (int j = 0; j < itemsPerRow; j++) {
-        print("current thumbnail: $currentThumbnail");
+        // print("current thumbnail: $currentThumbnail");
         temp.add(MeshThumbnail("assets/gradients/mesh/gradient${currentThumbnail}_small.jpg", currentThumbnail, (int i) => handleRewardedAd(i)));
         currentThumbnail++;
       }
@@ -47,7 +49,10 @@ class _CustomizeState extends State<Customize> {
   void handleRewardedAd(int index) {
     if (canWatchAd) {
       RewardedVideoAd.instance.show();
+    } else {
+      Navigator.of(context).push(CustomModal.createRoute(AddPracticeWarningModal("No rewarded ad is available right now, please try again later or buy all customizations.")));
     }
+
     RewardedVideoAd.instance.listener = (RewardedVideoAdEvent event, {String rewardType, int rewardAmount}) {
       if (event == RewardedVideoAdEvent.rewarded) {
         IAPConfig.updateBackground(index);

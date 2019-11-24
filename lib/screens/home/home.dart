@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:speed_cube_timer/components/containers/delete_item_modal.dart';
+import 'package:speed_cube_timer/components/containers/rate_app_modal.dart';
 import 'package:speed_cube_timer/components/custom/custom_modal.dart';
 import 'package:speed_cube_timer/components/navigation/top_menu.dart';
 import 'package:speed_cube_timer/screens/home/record_activity.dart';
@@ -23,6 +25,7 @@ class _HomeState extends State<Home> {
   Timer timer;
 
   Box settings = Hive.box("settings");
+  Random rng = Random();
 
   bool showStatus = true;
   String status = "Long press to get ready!";
@@ -126,6 +129,14 @@ class _HomeState extends State<Home> {
         plus2S = false;
         dnf = false;
       });
+
+      if (!settings.get("reviewed", defaultValue: false)) {
+        // give a 2.5% chance of showing the rate app modal
+        if (rng.nextDouble() < 0.025) {
+          Navigator.of(context).push(CustomModal.createRoute(RateAppModal()));
+        }
+      }
+
     }
 
     print("ON TAP DOWN");
