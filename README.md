@@ -13,3 +13,7 @@ A cube timer which looks good.
 
 ## Future ideas
 - Advanced algorithms
+
+## Mesh gradients resize ratios:
+- original -> 3.5 times smaller for the background
+- brackground size -> 3 times smaller for thumbnail

@@ -44,7 +44,9 @@ class _BuyIAPButtonState extends State<BuyIAPButton> {
   Future<void> getProducts() async {
     Set<String> ids = Set.from(productIds);
     ProductDetailsResponse response = await iap.queryProductDetails(ids);
-    setState(() =>products = response.productDetails);
+    if (mounted) {
+      setState(() => products = response.productDetails);
+    }
   }
 
   Future<void> getPastPurchases() async {
@@ -54,7 +56,9 @@ class _BuyIAPButtonState extends State<BuyIAPButton> {
         InAppPurchaseConnection.instance.completePurchase(purchase);
       }
     }
-    setState(() => purchases = response.pastPurchases);
+    if (mounted) {
+      setState(() => purchases = response.pastPurchases);
+    }
   }
 
   PurchaseDetails hasPurchased(String productID) {
@@ -71,6 +75,12 @@ class _BuyIAPButtonState extends State<BuyIAPButton> {
   void buyRemoveAllAdsUnlockAllCustomizations() {
     final PurchaseParam purchaseParam = PurchaseParam(productDetails: products[0]);
     iap.buyConsumable(purchaseParam: purchaseParam, autoConsume: true);
+  }
+
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
   }
 
   @override

@@ -26,7 +26,7 @@ class IAPConfig {
 
     List<dynamic> backgrounds = unlocked.get("backgrounds");
     if (backgrounds == null) {
-      List<bool> initBackgrounds = List.generate(totalBackgrounds, (int index) => false);
+      List<bool> initBackgrounds = List.generate(totalBackgrounds, (int index) => index < 2);
       // print(initBackgrounds);
       Firestore.instance.collection("backgrounds").document(udid).get().then((DocumentSnapshot ds) {
         if (ds.exists) {
@@ -100,7 +100,7 @@ class IAPConfig {
     List<dynamic> backgrounds = unlocked.get("backgrounds");
     backgrounds[index] = true;
 
-    Firestore.instance.collection("backgrounds").document(udid).updateData(<String, List<bool>>{
+    Firestore.instance.collection("backgrounds").document(udid).updateData(<String, List<dynamic>>{
       "unlocked": backgrounds
     }).catchError((error) => print("Something went wrong when trying to update $index background!"));
     unlocked.put("backgrounds", backgrounds);

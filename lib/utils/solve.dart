@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:speed_cube_timer/utils/gen_scramble.dart';
 
+// TODO: this code needs a major refactor
 class Solve {
   static const int maxBoxSize = 512;
   static const int statsFormatVersion = 0;
