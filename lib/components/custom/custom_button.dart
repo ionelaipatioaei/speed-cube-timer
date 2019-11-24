@@ -25,7 +25,11 @@ class _CustomButtonState extends State<CustomButton> {
   void animatePress() {
     setState(() => opacity = widget.endOpacity);
     widget.action();
-    Timer(Duration(milliseconds: 150), () => setState(() => opacity = widget.startOpacity));
+    Timer(Duration(milliseconds: 150), () {
+      if (mounted) {
+        setState(() => opacity = widget.startOpacity);
+      }
+    });
   }
 
   void resetOpacity(Timer timer) {

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:speed_cube_timer/screens/home/home.dart';
+import 'package:speed_cube_timer/utils/ads_ids.dart';
 import 'package:speed_cube_timer/utils/iap_config.dart';
 import 'package:speed_cube_timer/utils/solve.dart';
 
@@ -35,7 +36,7 @@ void main() async {
 class App extends StatelessWidget {
   // show the bottom ad
   final BannerAd bottomBanner = BannerAd(
-    adUnitId: BannerAd.testAdUnitId,
+    adUnitId: BOTTOM_BANNER_AD_ID,
     size: AdSize.smartBanner,
     // targetingInfo: targetingInfo,
     listener: (MobileAdEvent event) {

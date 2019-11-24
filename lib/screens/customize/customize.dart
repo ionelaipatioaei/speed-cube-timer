@@ -7,6 +7,7 @@ import 'package:speed_cube_timer/components/custom/custom_list_view.dart';
 import 'package:speed_cube_timer/components/custom/custom_modal.dart';
 import 'package:speed_cube_timer/components/navigation/top_navbar.dart';
 import 'package:speed_cube_timer/shared/background.dart';
+import 'package:speed_cube_timer/utils/ads_ids.dart';
 import 'package:speed_cube_timer/utils/iap_config.dart';
 
 class Customize extends StatefulWidget {
@@ -67,14 +68,15 @@ class _CustomizeState extends State<Customize> {
       }
 
       if (event == RewardedVideoAdEvent.closed) {
-        RewardedVideoAd.instance.load(adUnitId: RewardedVideoAd.testAdUnitId, targetingInfo: targetingInfo);
+        setState(() => canWatchAd = false);
+        RewardedVideoAd.instance.load(adUnitId: REWARDED_AD_ID, targetingInfo: targetingInfo);
       }
     };
   }
 
   @override
   void initState() {
-    RewardedVideoAd.instance.load(adUnitId: RewardedVideoAd.testAdUnitId, targetingInfo: targetingInfo);
+    RewardedVideoAd.instance.load(adUnitId: REWARDED_AD_ID, targetingInfo: targetingInfo);
     super.initState();
   }
 

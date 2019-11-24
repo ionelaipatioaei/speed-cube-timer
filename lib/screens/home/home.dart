@@ -10,6 +10,7 @@ import 'package:speed_cube_timer/components/custom/custom_modal.dart';
 import 'package:speed_cube_timer/components/navigation/top_menu.dart';
 import 'package:speed_cube_timer/screens/home/record_activity.dart';
 import 'package:speed_cube_timer/shared/background.dart';
+import 'package:speed_cube_timer/utils/ads_ids.dart';
 import 'package:speed_cube_timer/utils/gen_scramble.dart';
 import 'package:speed_cube_timer/utils/solve.dart';
 
@@ -65,7 +66,7 @@ class _HomeState extends State<Home> {
   }
 
   InterstitialAd interstitialAd = InterstitialAd(
-    adUnitId: InterstitialAd.testAdUnitId,
+    adUnitId: INTERSTITIAL_AD_ID,
     // targetingInfo: targetingInfo,
     listener: (MobileAdEvent event) {
       print("InterstitialAd event is $event");

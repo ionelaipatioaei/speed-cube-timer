@@ -3,7 +3,7 @@ import 'package:speed_cube_timer/utils/gen_scramble.dart';
 
 // TODO: this code needs a major refactor
 class Solve {
-  static const int maxBoxSize = 512;
+  // static const int maxBoxSize = 512;
   static const int statsFormatVersion = 0;
 
   static Future<void> saveSolve(int date, String scramble, bool inspected, int inspectionTime, int solveTime, bool plus2S, bool dnf) async {
@@ -13,11 +13,8 @@ class Solve {
     String name = GenScramble.getOptionName(options[selected]);
     String data = "date:$date,practicing:$name,scramble:$scramble,inspected:$inspected,inspection_time:$inspectionTime,solve_time:$solveTime,plus_2s:$plus2S,dnf:$dnf";
 
-    Box statistics = Hive.box("statistics");
-    String boxIndexKey = "stats_${name}_index";
-    int boxIndex = statistics.get(boxIndexKey, defaultValue: 0);
-    String boxToWrite = "stats_${name}_$boxIndex";
-    print("Getting index from: $boxIndexKey with index: $boxIndex in order to open box: $boxToWrite");
+    // Box statistics = Hive.box("statistics");
+    String boxToWrite = "stats_$name";
     if(!Hive.isBoxOpen(boxToWrite)) {
       print("Box: $boxToWrite is not open. Opening...");
       await Hive.openBox(boxToWrite);
@@ -25,13 +22,6 @@ class Solve {
     }
     Box box = Hive.box(boxToWrite);
     box.add(data);
-    print("Added this data: $data to box: $boxToWrite");
-    if (box.length >= maxBoxSize) {
-      box..compact()..close();
-      print("Box: $boxToWrite has over $maxBoxSize items, compacting and closing completed.");
-      statistics.put(boxIndexKey, ++boxIndex);
-      print("New box index: $boxIndex for $name stats box.");
-    }
     print("Data was written successfully!");
     await updateBottomStats();
   }
@@ -41,19 +31,15 @@ class Solve {
     List<String> options = settings.get("options", defaultValue: GenScramble.defaultOptions);
     int selected = settings.get("selected_option", defaultValue: 0);
     String name = GenScramble.getOptionName(options[selected]);
-    Box statistics = Hive.box("statistics");
-    String boxIndexKey = "stats_${name}_index";
-    int boxIndex = statistics.get(boxIndexKey, defaultValue: 0);
-    String lastStatsBox = "stats_${name}_$boxIndex";
-    if(!Hive.isBoxOpen(lastStatsBox)) {
-      print("Box: $lastStatsBox is not open. Opening...");
-      await Hive.openBox(lastStatsBox);
-      print("Box opened!");
+
+    String boxName = "stats_$name";
+    if(!Hive.isBoxOpen(boxName)) {
+      await Hive.openBox(boxName);
     }
-    Box box = Hive.box(lastStatsBox);
+    Box box = Hive.box(boxName);
     if (box.length > 0) {
       box.deleteAt(box.length - 1);
-      print("Deleted last entry from box: $lastStatsBox");
+      print("Deleted last entry from box: $boxName");
       await updateBestWorstTimes();
       await updateBottomStats();
     }
@@ -64,16 +50,12 @@ class Solve {
     List<String> options = settings.get("options", defaultValue: GenScramble.defaultOptions);
     int selected = settings.get("selected_option", defaultValue: 0);
     String name = GenScramble.getOptionName(options[selected]);
-    Box statistics = Hive.box("statistics");
-    String boxIndexKey = "stats_${name}_index";
-    int boxIndex = statistics.get(boxIndexKey, defaultValue: 0);
-    String lastStatsBox = "stats_${name}_$boxIndex";
-    if(!Hive.isBoxOpen(lastStatsBox)) {
-      print("Box: $lastStatsBox is not open. Opening...");
-      await Hive.openBox(lastStatsBox);
-      print("Box opened!");
+
+    String boxName = "stats_$name";
+    if(!Hive.isBoxOpen(boxName)) {
+      await Hive.openBox(boxName);
     }
-    Box box = Hive.box(lastStatsBox);
+    Box box = Hive.box(boxName);
     if (box.length > 0) {
       int lastIndex = box.length - 1;
       String statToModify = box.getAt(lastIndex);
@@ -89,7 +71,6 @@ class Solve {
       String rebuildStat = "date:$date,practicing:$nameProp,scramble:$scramble,inspected:$inspected,inspection_time:$inspectionTime,solve_time:$solveTime,plus_2s:$plus2SProp,dnf:$dnfProp";
 
       box.putAt(lastIndex, rebuildStat);
-      print("Modifiend box: $lastStatsBox at: $lastIndex with data: $rebuildStat");
       await updateBestWorstTimes();
       await updateBottomStats();
     }
@@ -109,63 +90,24 @@ class Solve {
     List<String> options = settings.get("options", defaultValue: GenScramble.defaultOptions);
     int selected = settings.get("selected_option", defaultValue: 0);
     String name = GenScramble.getOptionName(options[selected]);
-    Box statistics = Hive.box("statistics");
-    String boxIndexKey = "stats_${name}_index";
-    int boxIndex = statistics.get(boxIndexKey, defaultValue: 0);
-    String lastStatsBox = "stats_${name}_$boxIndex";
-    // print("Getting index from: $boxIndexKey with index: $boxIndex in order to open box: $boxToWrite");
-    if(!Hive.isBoxOpen(lastStatsBox)) {
-      print("Box: $lastStatsBox is not open. Opening...");
-      await Hive.openBox(lastStatsBox);
-      print("Box opened!");
+    String boxName = "stats_$name";
+    if(!Hive.isBoxOpen(boxName)) {
+      await Hive.openBox(boxName);
     }
-    Box box = Hive.box(lastStatsBox);
-    if (boxIndex > 0 && box.length < length) {
-      int neededBoxes = (length / maxBoxSize).ceil();
-      print("$neededBoxes boxes are needed in order to collect $length solve entries");
-      int availableItems = (boxIndex * maxBoxSize) + box.length;
-      int startBox = 0;
+    Box box = Hive.box(boxName);
 
-      if (availableItems < length) {
-        neededBoxes = boxIndex + 1;
-        print("Not enough boxes, changing neededBoxes to: $neededBoxes");
-      } else {
-        startBox = boxIndex - neededBoxes;
+    if (box.length <= length) {
+      for (int i = 0; i < box.length; i++) {
+        temp.add(getTime(box.getAt(i)));
       }
-      print("Starting from box with the index of: $startBox");
-      // print("Remaining items in the first box: $remainingInFirstBox");
-      for (int i = startBox; i < boxIndex + 1; i++) {
-        String boxToOpenKey = "stats_${name}_$i";
-        print("Working box: $boxToOpenKey");
-        if(!Hive.isBoxOpen(boxToOpenKey)) {
-          print("Box: $boxToOpenKey is not open. Opening...");
-          await Hive.openBox(boxToOpenKey);
-          print("Box opened!");
-        }
-        Box currentBox = Hive.box(boxToOpenKey);
-        for (int j = 0; j < currentBox.length; j++) {
-          temp.add(getTime(currentBox.getAt(j)));
-        }
-        if (i < boxIndex) {
-          currentBox..compact()..close();
-        }
-      }
-      // so much easier and cleaner to actually skip the first items here
-      int skipItems = temp.length > length ? temp.length - length : 0;
-      return temp.skip(skipItems).toList();
     } else {
-      if (box.length >= length) {
-        int startIndex = box.length - length;
-        for (int i = startIndex; i < box.length; i++) {
-          temp.add(getTime(box.getAt(i)));
-        }
-      } else {
-        for (int i = 0; i < box.length; i++) {
-          temp.add(getTime(box.getAt(i)));
-        }
+      int start = box.length - length;
+      for (int i = start; i < box.length; i++) {
+        temp.add(getTime(box.getAt(i)));
       }
-      return temp;
     }
+
+    return temp;
   }
 
   static Future<void> updateBottomStats() async {
@@ -176,21 +118,21 @@ class Solve {
     List<String> options = settings.get("options", defaultValue: GenScramble.defaultOptions);
     int selected = settings.get("selected_option", defaultValue: 0);
     String name = GenScramble.getOptionName(options[selected]);
-    String boxIndexKey = "stats_${name}_index";
-    int boxIndex = statistics.get(boxIndexKey, defaultValue: 0);
-    String lastStatsBoxName = "stats_${name}_$boxIndex";
-    if (!Hive.isBoxOpen(lastStatsBoxName)) {
-      await Hive.openBox(lastStatsBoxName);
+    String boxName = "stats_$name";
+    // int boxIndex = statistics.get(boxIndexKey, defaultValue: 0);
+    // String lastStatsBoxName = "stats_${name}_$boxIndex";
+    if (!Hive.isBoxOpen(boxName)) {
+      await Hive.openBox(boxName);
     }
-    Box lastStatsBox = Hive.box(lastStatsBoxName);
+    Box box = Hive.box(boxName);
 
     List<int> stats = await getStats(statsAmount);
-    print(stats);
+    // print(stats);
 
     int bestTime = statistics.get("stats_${name}_best_time", defaultValue: 1<<30);
     int worstTime = statistics.get("stats_${name}_worst_time", defaultValue: 0);
 
-    int updatedTotalSolves = (maxBoxSize * boxIndex) + lastStatsBox.length;
+    int updatedTotalSolves = box.length;
     statistics.put("stats_${name}_total_solves", updatedTotalSolves);
 
     if (stats.isNotEmpty) {

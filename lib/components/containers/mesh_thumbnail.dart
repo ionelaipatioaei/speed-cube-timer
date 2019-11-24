@@ -21,7 +21,11 @@ class _MeshThumbnailState extends State<MeshThumbnail> {
 
   void animatePress() {
     setState(() => overlayOpacity = 0.26);
-    Timer(Duration(milliseconds: 200), () => setState(() => overlayOpacity = 0.0));
+    Timer(Duration(milliseconds: 200), () {
+      if (mounted) {
+        setState(() => overlayOpacity = 0.0);
+      }
+    });
     bool unlocked = Hive.box("unlocked").get("backgrounds")[widget.index];
     if (unlocked) {
       Hive.box("customize").put("mesh_gradient", widget.index);

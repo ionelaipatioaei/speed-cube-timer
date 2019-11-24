@@ -6,7 +6,7 @@ const List<List<Color>> readyColors = const [
 ];
 
 const List<List<Color>> inspectionColors = const [
-  const [Colors.yellow, Colors.yellowAccent],
+  const [Color(0xfffdc830), Color(0xfff37335)],
   const [Colors.red, Colors.redAccent]
 ];
 
